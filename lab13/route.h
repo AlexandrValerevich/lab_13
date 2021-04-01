@@ -17,6 +17,7 @@ public:
 	string getPlaceArrival();
 	bool   empty();
 	Route();
+	~Route() {};
 
 private:
 	bool setYear(int&);

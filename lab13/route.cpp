@@ -472,7 +472,6 @@ string Route::ToString(unsigned int flag ) {
 		to_string(data_arrival.tm_year)     + ' ' +
 		to_string(data_arrival.tm_hour)     + ':' +
 		to_string(data_arrival.tm_min)       + separate;
-	temp += '\n';
 
 	return temp;
 }
