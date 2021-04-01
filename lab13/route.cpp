@@ -443,7 +443,7 @@ string Route::ToString(unsigned int flag ) {
 		return "";
 
 	string temp;
-	char separate;
+	string separate;
 	switch (flag)
 	{
 	case 0: {
@@ -451,7 +451,7 @@ string Route::ToString(unsigned int flag ) {
 		break;
 	}
 	case 1: {
-		separate = '\t';
+		separate = "\t\t";
 		break;
 	}
 	default:
