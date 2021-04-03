@@ -18,7 +18,6 @@ public:
 	bool   empty();
 	void   Clear();
 	Route();
-	~Route() {};
 
 private:
 	bool setYear(int&);

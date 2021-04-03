@@ -42,6 +42,7 @@ void main() {
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
 
+
 	int query;
 	list<shared_ptr<Route>> Routes;
 	readFileRoutes(Routes, PATH);
@@ -82,13 +83,10 @@ void main() {
 
 	} while (query);
 
-	if (!Routes.empty())
-	{
-		deleteEmpty(Routes);
-		writeFileRoutes(Routes, PATH);
-	}
-	//tyt voznickaet isclychenir
-	return ;
+	deleteEmpty(Routes);
+	writeFileRoutes(Routes, PATH);
+	
+	exit(0);
 }
 
 
