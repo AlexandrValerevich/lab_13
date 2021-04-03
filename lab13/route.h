@@ -16,6 +16,7 @@ public:
 	string getPlaceDeparture();
 	string getPlaceArrival();
 	bool   empty();
+	void   Clear();
 	Route();
 	~Route() {};
 

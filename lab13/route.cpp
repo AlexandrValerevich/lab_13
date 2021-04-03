@@ -9,6 +9,15 @@ using namespace std;
 typedef unsigned char u_char;
 
 
+Route::Route()
+{
+	train_number = 0;
+	ticket_count = 0;
+	ClearDate(data_arrival);
+	ClearDate(data_departure);
+	isEmpty = true;
+}
+
 /*принимает на вход указатель на переменную в которую будет записан
 год отправления(прибытия) и возращает значеине true если запись прошла успешно*/
 bool Route::setYear(int& y) {
@@ -160,7 +169,7 @@ bool Route::setDateDeparture() {
 
 	while (!setYear(data_departure.tm_year))
 		if (!--attempt){
-			ClearDate(data_departure);
+			Clear();
 			cout << "Привышено количество попыток ввода" << endl;
 			return false;
 		}
@@ -169,7 +178,7 @@ bool Route::setDateDeparture() {
 
 	while (!setMounth(data_departure.tm_mon))
 		if (!--attempt) {
-			ClearDate(data_departure);
+			Clear();
 			cout << "Привышено количество попыток ввода" << endl;
 			return false;
 		}
@@ -178,7 +187,7 @@ bool Route::setDateDeparture() {
 
 	while (!setDay(data_departure.tm_mday))
 		if (!--attempt) {
-			ClearDate(data_departure);
+			Clear();
 			cout << "Привышено количество попыток ввода" << endl;
 			return false;
 		}
@@ -187,7 +196,7 @@ bool Route::setDateDeparture() {
 
 	while (!setHoure(data_departure.tm_hour))
 		if (!--attempt) {
-			ClearDate(data_departure);
+			Clear();
 			cout << "Привышено количество попыток ввода" << endl;
 			return false;
 		}
@@ -196,7 +205,7 @@ bool Route::setDateDeparture() {
 
 	while (!setMinute(data_departure.tm_min))
 		if (!--attempt) {
-			ClearDate(data_departure);
+			Clear();
 			cout << "Привышено количество попыток ввода" << endl;
 			return false;
 		}
@@ -210,7 +219,7 @@ bool Route::setDateArrival() {
 
 	while (!setYear(data_arrival.tm_year))
 		if (!--attempt) {
-			ClearDate(data_arrival);
+			Clear();
 			cout << "Привышено количество попыток ввода" << endl;
 			return false;
 		}
@@ -219,7 +228,7 @@ bool Route::setDateArrival() {
 
 	while (!setMounth(data_arrival.tm_mon))
 		if (!--attempt) {
-			ClearDate(data_arrival);
+			Clear();
 			cout << "Привышено количество попыток ввода" << endl;
 			return false;
 		}
@@ -228,7 +237,7 @@ bool Route::setDateArrival() {
 
 	while (!setDay(data_arrival.tm_mday))
 		if (!--attempt) {
-			ClearDate(data_arrival);
+			Clear();
 			cout << "Привышено количество попыток ввода" << endl;
 			return false;
 		}
@@ -237,7 +246,7 @@ bool Route::setDateArrival() {
 
 	while (!setHoure(data_arrival.tm_hour))
 		if (!--attempt) {
-			ClearDate(data_arrival);
+			Clear();
 			cout << "Привышено количество попыток ввода" << endl;
 			return false;
 		}
@@ -246,7 +255,7 @@ bool Route::setDateArrival() {
 
 	while (!setMinute(data_arrival.tm_min))
 		if (!--attempt) {
-			ClearDate(data_arrival);
+			Clear();
 			cout << "Привышено количество попыток ввода" << endl;
 			return false;
 		}
@@ -386,7 +395,7 @@ void Route::setRoute() {
 
 /*возвращает номер поезда*/
 int Route::getTrainNumber() {
-	return train_number;
+ 	return train_number;
 }
 
 /*возвращает количество купленных билетов поезда*/
@@ -427,7 +436,7 @@ bool Route::empty()
 	return isEmpty;
 }
 
-Route::Route()
+void Route::Clear()
 {
 	train_number = 0;
 	ticket_count = 0;
@@ -435,6 +444,7 @@ Route::Route()
 	ClearDate(data_departure);
 	isEmpty = true;
 }
+
 
 string Route::ToString(unsigned int flag ) {
 
@@ -460,13 +470,13 @@ string Route::ToString(unsigned int flag ) {
 	}
 	temp += "#" + to_string(train_number)    + separate;
 	temp += to_string(ticket_count) + " шт." + separate;
-	temp += place_departure                  + separate;
+	temp += place_departure.substr(0,5)      + separate;
 	temp += to_string(data_departure.tm_mday) + '.' +
 		to_string(data_departure.tm_mon)      + '.' +
 		to_string(data_departure.tm_year)     + ' ' +
 		to_string(data_departure.tm_hour)     + ':' +
 		to_string(data_departure.tm_min)     + separate;
-	temp += place_arrival                    + separate;
+	temp += place_arrival.substr(0, 5)       + separate;
 	temp += to_string(data_arrival.tm_mday) + '.' +
 		to_string(data_arrival.tm_mon)      + '.' +
 		to_string(data_arrival.tm_year)     + ' ' +
