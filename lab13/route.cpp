@@ -320,7 +320,7 @@ bool Route::setPlaceDeparture()
 	string temp;
 	cout << "Место отправления: ";
 	do {
-		cin >> temp;
+		getline(cin, temp);
 	}while (temp.empty());
 
 	place_departure = temp;
@@ -334,7 +334,7 @@ bool Route::setPlaceArrival()
 	string temp;
 	cout << "Место прибытия: ";
 	do {
-		cin >> temp;
+		getline(cin, temp);
 	} while (temp.empty());
 
 	place_arrival = temp;

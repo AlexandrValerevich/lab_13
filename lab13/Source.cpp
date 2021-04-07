@@ -23,28 +23,32 @@
 #include <algorithm>
 #include <memory>
 
+
 using namespace std;
 
 typedef unsigned char u_char;
  
-char PATH[] = "schedule.bin";
+char PATH[] = "schedule.out";
+
 
 void Menu();
-shared_ptr<Route> addRoute();
-void deleteRoute(list<shared_ptr<Route>>& ls);
+void addRoute(list<shared_ptr<Route>>& ls);
 void deleteEmpty(list<shared_ptr<Route>>& ls);
-void printRoutes(list<shared_ptr<Route>> ls);
+void printRoutes(list<shared_ptr<Route>>& ls, list<shared_ptr<Route>>& del_ls);
+void deleteRoute(list<shared_ptr<Route>>& ls, list<shared_ptr<Route>>& del_ls);
 void readFileRoutes(list<shared_ptr<Route>>& ls, char* fileName);
-void writeFileRoutes(list<shared_ptr<Route>>& ls, char* fileName);
+void writeFileRoutes(list<shared_ptr<Route>>& ls, list<shared_ptr<Route>>& del_ls, char* fileName);
 
 
-void main() {
+
+int main() {
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
 
-
 	int query;
 	list<shared_ptr<Route>> Routes;
+	list<shared_ptr<Route>> deleteRoutes;
+	deleteRoutes.push_back(shared_ptr<Route>(new Route()));
 	readFileRoutes(Routes, PATH);
 	Menu();
 	
@@ -55,13 +59,12 @@ void main() {
 		{
 		case 1: 
 		{
-			printRoutes(Routes);
+			printRoutes(Routes, deleteRoutes);
 			break;
 		}
 		case 2: 
 		{
-			Routes.push_back(addRoute());
-			deleteEmpty(Routes);
+			addRoute(Routes);
 			if (Routes.size() > 1) {
 				Routes.sort([](shared_ptr<Route> first, shared_ptr<Route> second) {
 					return first->getTrainNumber() > second->getTrainNumber();
@@ -71,11 +74,12 @@ void main() {
 		}
 		case 3:
 		{
-			deleteRoute(Routes);
+			deleteRoute(Routes, deleteRoutes);
 			break;
 		}
 		case 4: {
 			system("cls");
+			break;
 		}
 		default:
 			break;
@@ -83,46 +87,40 @@ void main() {
 
 	} while (query);
 
-	deleteEmpty(Routes);
-	writeFileRoutes(Routes, PATH);
+	//deleteEmpty(Routes);
+	writeFileRoutes(Routes,deleteRoutes, PATH);
 	
 	exit(0);
 }
 
 
 void Menu() {
-	cout << "1. Вывести расписание" << endl;
+	cout << "1. Вывести расписание"    << endl;
 	cout << "2. Создать новый маршрут" << endl;
-	cout << "3. Удалить маршрут" << endl;
-	cout << "4. Очистить консоль" << endl;
-	cout << "0. Покинуть программу" << endl;
+	cout << "3. Удалить маршрут"       << endl;
+	cout << "4. Очистить консоль"      << endl;
+	cout << "0. Покинуть программу"    << endl;
 }
 
-shared_ptr<Route> addRoute() {
+void addRoute(list<shared_ptr<Route>>& ls) {
 	shared_ptr<Route> temp = shared_ptr<Route>(new Route());
 	temp->setRoute();
-	if (temp->empty()) {
-		return nullptr;
-	}
-	return temp;
+	if (temp->empty()) 
+		return;
+	ls.push_back(temp);
+	return;
 }
 
-void deleteRoute(list<shared_ptr<Route>>& ls)
+void deleteRoute(list<shared_ptr<Route>>& ls, list<shared_ptr<Route>>& del_ls)
 {
 	int train_num;
 	cout << "\tВведите номер поезда: ";
 	cin >> train_num;
 
-	for (auto it = ls.begin(); it != ls.end(); it++) 
-	{
-		if ((*it)->getTrainNumber() == train_num) 
-		{
-			it = ls.erase(it);	
-			cout << "\tМаршрут удален" << endl;
-			return;
-		}
-	}
-	cout << "\tМаршрут не найден" << endl;
+	for (auto& it : ls)
+		if (it->getTrainNumber() == train_num)
+			del_ls.push_back(it);
+			
 	return;
 }
 
@@ -164,7 +162,7 @@ void readFileRoutes(list<shared_ptr<Route>>& ls, char* fileName) {
 	fo.close();
 }
 
-void writeFileRoutes(list<shared_ptr<Route>>& ls, char* fileName) {
+void writeFileRoutes(list<shared_ptr<Route>>& ls, list<shared_ptr<Route>>& del_ls, char* fileName) {
 	ofstream fo(fileName, ios_base::out | ios_base::binary | ios_base::trunc);
 
 	if (!fo.is_open()) {
@@ -173,12 +171,18 @@ void writeFileRoutes(list<shared_ptr<Route>>& ls, char* fileName) {
 	}
 
 	for (const auto& it : ls) {
-		fo.write((char*)it.get(), sizeof(Route));
+		auto find_it = find_if(del_ls.begin(), del_ls.end(), [it](shared_ptr<Route>& compeare) {
+			return compeare.get() == it.get();
+			});
+
+		if (find_it == del_ls.end()) {
+			fo.write((char*)it.get(), sizeof(Route));
+		}
 	}
 	fo.close();
 }
 
-void printRoutes(list<shared_ptr<Route>> ls) {
+void printRoutes(list<shared_ptr<Route>>& ls, list<shared_ptr<Route>>& del_ls) {
 	int i = 1;
 
 	cout << "№\t";
@@ -189,9 +193,17 @@ void printRoutes(list<shared_ptr<Route>> ls) {
 	cout << "Пункт Б\t\t";
 	cout << "Прибытие\n";
 
-	for (const auto& it : ls) {
-		cout << i++ << "\t";
-		cout << it->ToString(ROW) << endl;
+
+	for (auto& it : ls) 
+	{
+		auto find_it = find_if(del_ls.begin(), del_ls.end(), [it](shared_ptr<Route>& compeare) {
+			return compeare.get() == it.get();
+			});
+
+		if(find_it == del_ls.end()) {
+			cout << i++ << "\t";
+			cout << it->ToString(ROW) << endl;
+		}
 	}
 	return;
 }

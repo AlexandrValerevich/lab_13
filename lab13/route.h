@@ -18,6 +18,7 @@ public:
 	bool   empty();
 	void   Clear();
 	Route();
+	~Route() {};
 
 private:
 	bool setYear(int&);
@@ -33,7 +34,6 @@ private:
 	bool setDateDeparture();
 	bool setDateArrival();
 	
-
 private:
 	int train_number;
 	tm  data_departure;

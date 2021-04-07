@@ -1,3 +1,2 @@
 ﻿  Source.cpp
-C:\Users\Александр\source\repos\lab13\lab13\Source.cpp(41,13): warning C4326: возвращаемый тип "main" должен быть "int", а не "void"
   lab13.vcxproj -> C:\Users\Александр\source\repos\lab13\Debug\lab13.exe
